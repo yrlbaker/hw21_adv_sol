@@ -15,25 +15,34 @@ RefundablePostDeliveryCrowdsale
     
     constructor(
         // Using non-negative rate of the smallest unit of a token, TKNbits. 
-        uint256 rate,
+        uint rate,
         // address payable is the beneficiary of the wallet.
         address payable wallet,
-        // PupperCoinSale will work with the PupperCoin token. 
+        // PupperCoinSale will work with the PupperCoin token and receive the ether raised.
         PupperCoin token,
         // open is "now" here
         uint now,
         // close is "now" + 24 weeks, to set the time properly, as per instructions.
         uint close, 
         // RefundablePostDeliveryCrowdsale delivers tokens when crowdsale closes and goal is met.
-        uint 256 goal
+        uint goal
     )
-    
-        // @TODO: Pass the constructor parameters to the crowdsale contracts.
+        // Pass the constructor parameters to the crowdsale contracts.
+        // Parameters rate, wallet, and the token go to crowdsale constructor.
+        Crowdsale(rate, wallet, token)
+        // This Crowdsale is capped.
+        CappedCrowdsale(cap)
+        // Parameters now and close (now + 24 weeks) go to TimedCrowdsale
+        TimedCrowdsale(now, now + 24 weeks)
+        // RefundablePostDeliveryCrowdsale has no constructor; replace w/RefundableCrowdsale.  
+        // Users will get a refund if the goal is not met.
+        RefundableCrowdsale(goal)
         public
     {
         // constructor can stay empty
     }
 }
+
 
 contract PupperCoinSaleDeployer {
 
